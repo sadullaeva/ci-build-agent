@@ -1,0 +1,5 @@
+{
+  "port": 8082,
+  "serverHost": "localhost",
+  "serverPort": 8081
+}
