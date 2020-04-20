@@ -22,8 +22,8 @@ class Agent {
         console.log('Could not register', err);
       });
 
-    while (!this._registered) {
-      setTimeout(this.run, TIMEOUT);
+    if (!this._registered) {
+      this._timeoutId = setTimeout(this.run, TIMEOUT);
     }
   };
 
