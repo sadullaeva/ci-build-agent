@@ -10,6 +10,8 @@ class Agent {
   }
 
   run = () => {
+    console.log('Agent: AGENT IS RUN');
+
     clearTimeout(this._timeoutId);
 
     const TIMEOUT = 30000; // 30s
@@ -17,14 +19,14 @@ class Agent {
     this.register()
       .then(() => {
         this._registered = true;
+
+        console.log('Agent: AGENT REGISTERED');
       })
       .catch(err => {
-        console.log('Could not register', err);
-      });
+        console.log('Agent: AGENT NOT REGISTERED, TRY AGAIN', err);
 
-    if (!this._registered) {
-      this._timeoutId = setTimeout(this.run, TIMEOUT);
-    }
+        this._timeoutId = setTimeout(this.run, TIMEOUT);
+      });
   };
 
   register = () => {

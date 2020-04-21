@@ -4,7 +4,7 @@ const runBuild = require('./runBuild');
 const { notifyBuildResult } = require('../api/serverMethods');
 
 class BuildRunner {
-  constructor({ buildId, repoName, mainBranch, commitHash, command }) {
+  constructor({ buildId, repoName, mainBranch, commitHash, command, startTime }) {
     this._repoName = repoName;
     this._mainBranch = mainBranch;
     this._commitHash = commitHash;
@@ -12,7 +12,7 @@ class BuildRunner {
 
     this._build = {
       id: buildId,
-      startTime: undefined,
+      startTime: startTime,
       endTime: undefined,
       success: false,
       log: '',
@@ -20,23 +20,37 @@ class BuildRunner {
   }
 
   runProcess = () => {
+    console.log('BuildRunner: PROCESS IS RUN');
+
     this.cloneRepo()
       .then(success => {
         if (success) {
+          console.log('BuildRunner: REPO WAS CLONED SUCCESSFULLY');
+
           return this.checkoutCommit();
         }
+        console.log('BuildRunner: REPO WAS NOT CLONED');
+
         return Promise.reject();
       })
       .then(success => {
         if (success) {
+          console.log('BuildRunner: COMMIT CHECKOUT WAS SUCCESSFUL');
+
           return this.runBuild();
         }
+        console.log('BuildRunner: COMMIT CHECKOUT WAS NOT SUCCESSFUL');
+
         return Promise.reject();
       })
       .then(() => {
+        console.log('BuildRunner: BUILD COMPLETED');
+
         return this.sendResult();
       })
       .catch(err => {
+        console.log('BuildRunner: SOMETHING WENT WRONG');
+
         return this.sendFail();
       });
   };
@@ -50,10 +64,7 @@ class BuildRunner {
   };
 
   runBuild = async () => {
-    this._build.startTime = new Date();
-
     const { stdout, stderr, code } = await runBuild(this._command);
-    console.log('RUN BUILD', { stdout, stderr, code });
 
     this._build.endTime = new Date();
     this._build.success = code === 0;
@@ -70,6 +81,8 @@ class BuildRunner {
       buildLog,
       success,
       duration: endTime - startTime,
+    }).catch(err => {
+      console.log('BuildRunner: COULD NOT NOTIFY BUILD RESULT', err);
     });
   };
 
@@ -81,6 +94,8 @@ class BuildRunner {
       buildLog,
       success: false,
       duration: 0,
+    }).catch(err => {
+      console.log('BuildRunner: COULD NOT NOTIFY BUILD FAIL', err);
     });
   };
 }
