@@ -1,6 +1,8 @@
 const express = require('express');
 const router = express.Router();
 
-const runBuild = require('../controllers/runBuild');
+const makeBuild = require('../controllers/makeBuild');
 
-router.post('/build', runBuild);
+router.post('/build', makeBuild);
+
+module.exports = router;
