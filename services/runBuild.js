@@ -7,7 +7,7 @@ module.exports = async command => {
   let stderr = '';
 
   try {
-    const result = await child_process.exec(command, { cwd });
+    const result = await child_process.exec(`cd ${cwd} && ${command}`);
 
     stdout = result.stdout;
     stderr = result.stderr;
