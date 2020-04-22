@@ -1,0 +1,110 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "CI build agent",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "/api"
+    }
+  ],
+  "tags": [
+    {
+      "name": "build"
+    },
+    {
+      "name": "health"
+    }
+  ],
+  "paths": {
+    "/build": {
+      "post": {
+        "tags": [
+          "build"
+        ],
+        "summary": "Set task for the build-agent",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/BuildInput"
+        },
+        "responses": {
+          "200": {
+            "description": "Task is set"
+          }
+        }
+      }
+    },
+    "/health": {
+      "get": {
+        "tags": [
+          "health"
+        ],
+        "summary": "Health check",
+        "responses": {
+          "200": {
+            "description": "Build-agent is alive"
+          },
+          "500": {
+            "description": "Build-agent is not run"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Task": {
+        "type": "object",
+        "properties": {
+          "buildId": {
+            "type": "string",
+            "description": "Task identifier",
+            "format": "uuid"
+          },
+          "repoName": {
+            "type": "string",
+            "description": "Repo name",
+            "example": "user123/repo-name"
+          },
+          "mainBranch": {
+            "type": "string",
+            "description": "Main branch",
+            "example": "master"
+          },
+          "commitHash": {
+            "type": "string",
+            "description": "Commit hash",
+            "format": "hash"
+          },
+          "command": {
+            "type": "string",
+            "description": "Command to execute",
+            "example": "npm ci && npm run test"
+          }
+        }
+      }
+    },
+    "requestBodies": {
+      "BuildInput": {
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Task"
+            }
+          },
+          "text/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Task"
+            }
+          },
+          "application/*+json": {
+            "schema": {
+              "$ref": "#/components/schemas/Task"
+            }
+          }
+        },
+        "required": true
+      }
+    }
+  }
+}

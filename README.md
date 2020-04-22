@@ -14,3 +14,5 @@ npm ci
 ```
 npm run start
 ```
+
+Урл для просмотра swagger документации: http://localhost:8082/swagger/
