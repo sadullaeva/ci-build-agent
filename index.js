@@ -1,9 +1,9 @@
-const path = require('path');
-const fs = require('fs');
 const express = require('express');
 const swaggerUi = require('swagger-ui-express');
 
-global.config = JSON.parse(fs.readFileSync(path.resolve(__dirname, 'agent-conf.json'), 'utf8'));
+const Config = require('./services/config');
+
+global.config = new Config();
 
 const Agent = require('./services/agent');
 const api = require('./routes/api');
@@ -23,4 +23,4 @@ app.use('*', (req, res) => {
   res.sendStatus(404);
 });
 
-app.listen(config.port || 8082);
+app.listen(config.port, config.host);

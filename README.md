@@ -24,12 +24,12 @@ npm run start
 npm run build-docker-image
 ```
 
-Запустить контейнер, заполнив `<host>` и `<port>`:
+Запустить контейнер, заполнив `<port>`:
 ```
-docker run -p <port>:<port> --env HOST=<host> PORT=<port> build-agent
+docker run --network host -p <port>:<port> --env PORT=<port> build-agent
 ```
 
 Например:
 ```
-docker run -p 8082:8082 --env HOST=localhost PORT=8082 build-agent
+docker run --network host -p 8082:8082 --env PORT=8082 build-agent
 ```
