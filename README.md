@@ -26,10 +26,10 @@ npm run build-docker-image
 
 Запустить контейнер, заполнив `<port>`:
 ```
-docker run --network host -p <port>:<port> --env PORT=<port> build-agent
+make run-docker-agent PORT=<port>
 ```
 
 Например:
 ```
-docker run --network host -p 8082:8082 --env PORT=8082 build-agent
+make run-docker-agent PORT=8082
 ```
